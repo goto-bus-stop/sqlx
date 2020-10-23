@@ -82,10 +82,13 @@ pub(super) async fn explain(
             .fetch_all(&mut *conn)
             .await?;
 
+    let mut iterations = 0;
     let mut program_i = 0;
     let program_size = program.len();
 
-    while program_i < program_size {
+    while program_i < program_size && iterations < 10_000 {
+        iterations += 1;
+
         let (_, ref opcode, p1, p2, p3, ref p4) = program[program_i];
 
         match &**opcode {

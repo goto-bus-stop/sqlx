@@ -186,3 +186,14 @@ async fn it_describes_bad_statement() -> anyhow::Result<()> {
 
     Ok(())
 }
+
+#[sqlx_macros::test]
+async fn it_exits_infinite_loop() -> anyhow::Result<()> {
+    let mut conn = new::<Sqlite>().await?;
+
+    let d = conn.describe("SELECT COUNT(*) FROM accounts GROUP BY name").await?;
+
+    assert_eq!(d.columns().len(), 1);
+
+    Ok(())
+}
